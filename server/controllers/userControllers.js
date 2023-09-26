@@ -1,6 +1,8 @@
 import Verification from "../models/emailVerificationModel.js";
+import PasswordReset from "../models/passwordResetModel.js";
 import Users from "../models/userModel.js";
-import { compareString } from "../utils/index.js";
+import { compareString, hashString } from "../utils/index.js";
+import { resetPasswordLink } from "../utils/sendEmail.js";
 
 export const verifyEmail = async (req, res, next) => {
   const { token, userId } = req.params;
@@ -59,5 +61,96 @@ export const verifyEmail = async (req, res, next) => {
     }
   } catch (err) {
     res.redirect(`/users/verified?status=error`);
+  }
+};
+
+export const requestPasswordReset = async (req, res) => {
+  const { email } = req.body;
+  try {
+    const user = await Users.findOne({ email });
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ status: "FAILED", message: "Email address not found" });
+    }
+    const existingRequest = await PasswordReset.findOne({ email });
+    if (existingRequest) {
+      if (existingRequest.expiresAt > Date.now()) {
+        return res.status(201).json({
+          status: "PENDING",
+          message: "Reset password link has already been sent to you email",
+        });
+      }
+      await PasswordReset.findOneAndDelete({ email });
+    }
+    await resetPasswordLink(user, res);
+  } catch (err) {
+    res.status(404).json({
+      message: err.message,
+    });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  const { userId, token } = req;
+  try {
+    const user = await Users.findOne({ _id: userId });
+
+    if (!user) {
+      const message = "Invalid password reset link. Try again later.";
+      res.redirect(
+        `/users/resetpassword?type=reset&status=error&message=${message}`
+      );
+    }
+    const resetPassword = PasswordReset.findOne({ userId });
+    if (!resetPassword) {
+      const message = "Invalid password reset link. Try again later.";
+      res.redirect(
+        `/users/resetpassword?type=reset&status=error&message=${message}`
+      );
+    }
+
+    const { expiresAt, token: hashedToken } = resetPassword;
+
+    if (expiresAt < Date.now()) {
+      const message = "Reset password link has expired. Try again later.";
+      res.redirect(
+        `/users/resetpassword?type=reset&status=error&message=${message}`
+      );
+    }
+
+    const isMatch = await compareString(token, hashedToken);
+    if (!isMatch) {
+      const message = "Invalid password reset link. Try again later.";
+      res.redirect(
+        `/users/resetpassword?type=reset&status=error&message=${message}`
+      );
+    }
+
+    res.redirect(`/users/resetpassword?type=reset&id=${userId}`);
+  } catch (e) {
+    res.status(404).json({
+      message: e?.message,
+    });
+  }
+};
+
+export const changePassword = async (req, res) => {
+  const { userId, password } = req.body;
+  try {
+    const hashedPassword = await hashString(password);
+    const user = await Users.findOneAndUpdate(
+      { _id: userId },
+      { password: hashedPassword }
+    );
+
+    if (user) {
+      await PasswordReset.findOneAndDelete({ userId });
+      const message = "Password successfully reset";
+      res.redirect(`/users/resetpassword?&status=success&message=${message}`);
+    }
+  } catch (e) {
+    res.status(404).json({ message: e?.message });
   }
 };

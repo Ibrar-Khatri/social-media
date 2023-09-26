@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import { TOKEN_EXPIRE_DELAY } from "../utils/index.js";
 
 const emailVerificationSchema = new Schema({
   userId: String,
@@ -9,7 +10,7 @@ const emailVerificationSchema = new Schema({
   },
   expiresAt: {
     type: Number,
-    default: Date.now() + 86400000,
+    default: Date.now() + TOKEN_EXPIRE_DELAY,
   },
 });
 
