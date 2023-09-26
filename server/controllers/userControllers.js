@@ -1,7 +1,7 @@
 import Verification from "../models/emailVerificationModel.js";
 import PasswordReset from "../models/passwordResetModel.js";
 import Users from "../models/userModel.js";
-import { compareString, hashString } from "../utils/index.js";
+import { compareString, createJWT, hashString } from "../utils/index.js";
 import { resetPasswordLink } from "../utils/sendEmail.js";
 
 export const verifyEmail = async (req, res, next) => {
@@ -152,5 +152,72 @@ export const changePassword = async (req, res) => {
     }
   } catch (e) {
     res.status(404).json({ message: e?.message });
+  }
+};
+
+export const getUser = async (req, res) => {
+  try {
+    const { userId } = req.body.user;
+    const { id } = req.params;
+    const user = await Users.findById(id ?? userId).populate({
+      path: "friends",
+      select: "-password",
+    });
+
+    if (user) {
+      delete user.password;
+      res.status(200).send({
+        success: true,
+        user,
+      });
+    } else {
+      res.status(200).send({
+        success: false,
+        message: "User not found",
+      });
+    }
+  } catch (e) {
+    res
+      .status(500)
+      .json({ message: "auth error", success: false, error: e.message });
+  }
+};
+
+export const updateUser = async (req, res) => {
+  try {
+    const { firstName, lastName, location, profileUrl, profession } = req.body;
+
+    if (!(firstName || lastName || location || profileUrl || profession)) {
+      next("Please provide all fields");
+      return;
+    }
+    const { userId } = req.body.user;
+    const updateUser = {
+      firstName,
+      lastName,
+      location,
+      profileUrl,
+      profession,
+      _id: userId,
+    };
+    const user = await Users.findByIdAndUpdate(userId, updateUser, {
+      new: true,
+    });
+
+    await user.populate({
+      path: "friends",
+      select: "-password",
+    });
+
+    const token = createJWT(user?._id);
+    delete user.password;
+    res.status(200).send({
+      success: true,
+      user,
+      token,
+      message: "User updated successfully",
+    });
+  } catch (e) {
+    res.status(404).json({ error: e.message });
   }
 };
