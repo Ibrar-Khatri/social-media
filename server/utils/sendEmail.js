@@ -1,15 +1,18 @@
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import { v4 as uuidv4 } from "uuid";
-import { hashString } from "./index";
-import Verification from "../models/emailVerificationModel";
+import { hashString } from "./index.js";
+import Verification from "../models/emailVerificationModel.js";
 
 dotenv.config();
 
 const { AUTH_EMAIL, AUTH_PASSWORD, APP_URL } = process.env;
 
 const transporter = nodemailer.createTransport({
-  host: "happyfashion.outlook.com",
+  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: true,
   auth: {
     user: AUTH_EMAIL,
     pass: AUTH_PASSWORD,
@@ -21,7 +24,7 @@ export const sendVerificationEmail = async (user, res) => {
 
   const token = _id + uuidv4();
 
-  const link = `${APP_URL}users/verify/"${_id}"/"${token}`;
+  const link = `${APP_URL}users/verify/${_id}/${token}`;
 
   const mailOptions = {
     from: AUTH_EMAIL,
@@ -92,6 +95,7 @@ export const sendVerificationEmail = async (user, res) => {
       });
     }
   } catch (e) {
+    console.log("🚀 ~ e:2", e);
     res.status(404).json({
       message: "Something went wrong. Please try again later.",
     });

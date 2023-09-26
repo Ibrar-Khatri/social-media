@@ -4,11 +4,11 @@ const emailVerificationSchema = new Schema({
   userId: String,
   token: String,
   createdAt: {
-    type: Date,
+    type: Number,
     default: Date.now(),
   },
-  updatedAt: {
-    type: Date,
+  expiresAt: {
+    type: Number,
     default: Date.now() + 86400000,
   },
 });

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Email Verification</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .container {
+        text-align: center;
+        background-color: #fff;
+        border-radius: 5px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      p {
+        font-size: 16px;
+      }
+
+      #verification-message {
+        margin-top: 20px;
+        font-weight: bold;
+        color: #007bff;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" id="email-verified-content">
+      <h1 id="heading">Email Verified</h1>
+      <p id="info">
+        Congratulations! Your email has been successfully verified.
+      </p>
+      <button id="login-button">
+        <a href="">Login</a>
+      </button>
+    </div>
+  </body>
+  <script>
+    const urlParams = new URLSearchParams(window?.location?.search);
+    const message = urlParams.get("message");
+    const status = urlParams.get("status");
+
+    const heading = document.getElementById("heading");
+    const info = document.getElementById("info");
+
+    if (status === "success") {
+      info.innerHTML =
+        message ??
+        "Congratulations! Your email has been successfully verified.";
+    } else if (status === "error") {
+      heading.innerHTML = "Error";
+      info.innerHTML =
+        message ?? "Someting went wrong, Please try again letter";
+
+      const loginButton = document.getElementById("login-button");
+      loginButton.remove();
+    } else {
+      heading.innerHTML = "Error";
+      info.innerHTML =
+        message ?? "Someting went wrong, Please try again letter";
+    }
+  </script>
+</html>
