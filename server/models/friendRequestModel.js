@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
-import { REQUEST_STATUS } from "../utils/constant";
+import { REQUEST_STATUS } from "../utils/constant.js";
 
-const requestSchema = Schema(
+const requestSchema = new Schema(
   {
     requestTo: {
       type: Schema.Types.ObjectId,

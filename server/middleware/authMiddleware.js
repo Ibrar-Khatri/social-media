@@ -1,7 +1,9 @@
+import JWT from "jsonwebtoken";
+
 const userAuth = (req, res, next) => {
   const authHeader = req?.headers?.authorization;
 
-  if (!authHeader || !authHeader.startsWaith("Bearer"))
+  if (!authHeader || !authHeader?.includes("Bearer"))
     next("Authentication failed");
 
   const token = authHeader.split(" ")[1];
@@ -14,6 +16,7 @@ const userAuth = (req, res, next) => {
     };
     next();
   } catch (err) {
+    console.log("🚀 ~ err:", err);
     next("Authentication failed");
   }
 };

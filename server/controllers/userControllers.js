@@ -1,6 +1,8 @@
 import Verification from "../models/emailVerificationModel.js";
+import FriendRequest from "../models/friendRequestModel.js";
 import PasswordReset from "../models/passwordResetModel.js";
 import Users from "../models/userModel.js";
+import { REQUEST_STATUS } from "../utils/constant.js";
 import { compareString, createJWT, hashString } from "../utils/index.js";
 import { resetPasswordLink } from "../utils/sendEmail.js";
 
@@ -177,6 +179,7 @@ export const getUser = async (req, res) => {
       });
     }
   } catch (e) {
+    console.log("🚀 ~ e:", e);
     res
       .status(500)
       .json({ message: "auth error", success: false, error: e.message });
@@ -219,5 +222,139 @@ export const updateUser = async (req, res) => {
     });
   } catch (e) {
     res.status(404).json({ error: e.message });
+  }
+};
+
+export const friendRequest = async (req, res) => {
+  try {
+    const { userId } = req.body.user;
+    const { requestTo } = req.body;
+
+    const requestExists = await FriendRequest.findOne({
+      requestFrom: requestTo,
+      requestTo: userId,
+    });
+
+    if (requestExists) {
+      next("Friend request already exists");
+      return;
+    }
+    const newRequest = await FriendRequest.create({
+      requestTo,
+      requestFrom: userId,
+    });
+
+    res.status(200).send({
+      success: true,
+      message: "Friend request sent successfully",
+    });
+  } catch (e) {
+    console.log("🚀 ~ e:", e);
+    res
+      .status(500)
+      .json({ error: e.message, success: false, message: "auth error" });
+  }
+};
+
+export const getFriendRequest = async (req, res) => {
+  try {
+    const { userId } = req.body.user;
+    const request = await FriendRequest.find({
+      requestTo: userId,
+      requestStatus: REQUEST_STATUS["PENDING"],
+    })
+      .populate({
+        path: "requestFrom",
+        select: "firstName lastName profileUrl profession -password",
+      })
+      .limit(10)
+      .sort({ _id: -1 });
+
+    res.status(200).json({
+      success: true,
+      data: request,
+    });
+  } catch (e) {
+    res
+      .status(500)
+      .json({ error: e.message, success: false, message: "auth error" });
+  }
+};
+
+export const acceptRequest = async (req, res) => {
+  try {
+    const id = req.body.user.userId;
+    const { rid, status } = req.body;
+    const requestExists = FriendRequest.findById(rid);
+
+    if (!requestExists) {
+      next("No friend request found");
+      return;
+    }
+
+    const newRes = await FriendRequest.findByIdAndUpdate(
+      { _id: rid },
+      { requestStatus: status }
+    );
+    if (status === REQUEST_STATUS["ACCEPTED"]) {
+      const user = await Users.findById(id);
+      user.friends.push(newRes.requestFrom);
+      await user.save();
+
+      const friend = await Users.findById(newRes.requestFrom);
+
+      friend.friends.push(newRes.requestTo);
+
+      await friend.save();
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Friend request ${status.lowercase()}`,
+    });
+  } catch (e) {
+    res
+      .status(500)
+      .json({ error: e.message, success: false, message: "auth error" });
+  }
+};
+
+export const profileViews = async (req, res) => {
+  try {
+    const { userId } = req.body.user;
+    const { id } = req.body;
+
+    const user = await Users.findById(id);
+
+    user.views.push(userId);
+    await user.save();
+    res.status(201).json({
+      success: true,
+      message: "successfully",
+    });
+  } catch (e) {
+    res
+      .status(500)
+      .json({ error: e.message, success: false, message: "auth error" });
+  }
+};
+
+export const suggestedFriends = async (req, res) => {
+  try {
+    const { userId } = req.body.user;
+    let queryObject = {};
+    queryObject._id = { $ne: userId };
+    queryObject.friends = { $nin: userId };
+
+    let queryResult = await Users.find(queryObject)
+      .limit(15)
+      .select("firstName lastName profileUrl profession -password");
+
+    res.status(201).json({
+      success: true,
+      data: queryResult,
+    });
+  } catch (e) {
+    res.status(404).json({ message: e.message });
   }
 };
