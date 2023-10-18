@@ -9,9 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ant-design/cssinjs": "^1.17.0",
     "antd": "^5.9.4",
     "axios": "^1.5.1",
-    "next": "latest",
+    "next": "^13.5.4",
     "react": "latest",
     "react-dom": "latest"
   },
