@@ -7,7 +7,7 @@ import Link from "next/link";
 const Signup: FC = () => {
   const [form] = Form.useForm();
   return (
-    <div className="flex w-full h-full bg-grey justify-center items-center">
+    <div className="h-full flex w-full bg-grey justify-center items-center">
       <div className="w-full max-w-sm px-3">
         <Form
           name="Signup"

@@ -21,14 +21,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} `}>
+      <body>
         <Suspense fallback={<Loading />}>
           <StyledComponentsRegistry>
             <ConfigProvider>
-              <div className="min-h-screen w-full bg-white">
+              <div className="h-screen overscroll-y-auto">
                 <Header />
-                <div className="h-[calc(100vh-60px)] overflow-auto">
-                  {children}
+                <div className="pt-[70px] min-h-[calc(100vh-60px)] h-full">
+                  <div className="h-full  max-w-5xl  mx-auto">{children}</div>
                 </div>
               </div>
             </ConfigProvider>
