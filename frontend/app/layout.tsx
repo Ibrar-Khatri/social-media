@@ -27,7 +27,7 @@ export default function RootLayout({
             <ConfigProvider>
               <div className="h-screen overscroll-y-auto">
                 <Header />
-                <div className="pt-[70px] min-h-[calc(100vh-60px)] h-full">
+                <div className="pt-[70px] min-h-[calc(100vh-60px)] h-full bg-slate-100">
                   <div className="h-full  max-w-5xl  mx-auto">{children}</div>
                 </div>
               </div>

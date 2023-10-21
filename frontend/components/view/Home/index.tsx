@@ -1,134 +1,14 @@
 import { FC } from "react";
+import LeftPanel from "./LeftPanel";
+import RightPanel from "./RightPanel";
+import CenterPanel from "./CenterPanel";
 
 const Home: FC = () => {
   return (
-    <div className="bg-slate-400">
-      <p>sssss111</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>sssss</p>
-      <p>ssssslastttt</p>
+    <div className="flex justify-between gap-[10px]">
+      <LeftPanel />
+      <CenterPanel />
+      <RightPanel />
     </div>
   );
 };
