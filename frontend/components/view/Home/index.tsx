@@ -5,7 +5,7 @@ import CenterPanel from "./CenterPanel";
 
 const Home: FC = () => {
   return (
-    <div className="flex justify-between gap-[10px]">
+    <div className="flex justify-between gap-[15px] relative">
       <LeftPanel />
       <CenterPanel />
       <RightPanel />
