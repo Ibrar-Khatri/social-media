@@ -31,8 +31,8 @@ const Friends: FC = () => {
         <p>{friends.length}</p>
       </div>
 
-      {friends.map((friend) => (
-        <FriendsCard friend={friend} />
+      {friends.map((friend, key) => (
+        <FriendsCard key={key} friend={friend} />
       ))}
     </div>
   );

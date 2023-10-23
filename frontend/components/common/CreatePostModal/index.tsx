@@ -43,7 +43,7 @@ const CreatePostModal: FC<CreatePostModalInterface> = ({ open, setOpen }) => {
             <Input.TextArea
               placeholder="Whats on your mind, Liam"
               autoSize={{ minRows: 3, maxRows: 5 }}
-              className="!text-xl !border-0 placeholder:!text-red-700 focus:!border-none active:!border-none"
+              className="!text-xl !border-0 placeholder:!text-slate-700 focus:!shadow-none active:!border-none"
             />
           </div>
           <Upload

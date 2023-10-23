@@ -25,8 +25,8 @@ const FriendSuggestion: FC = () => {
         <p className="text-lg font-bold">Friend Suggestion</p>
       </div>
 
-      {requests.map((friend) => (
-        <FriendSuggestionCard friend={friend} />
+      {requests.map((friend, key) => (
+        <FriendSuggestionCard key={key} friend={friend} />
       ))}
     </div>
   );

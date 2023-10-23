@@ -4,7 +4,7 @@ import FriendSuggestion from "./FriendSuggestion";
 
 const RightPanel: FC = () => {
   return (
-    <div className="max-w-[300px] flex flex-col gap-[10px] height-full max-h-[calc(100vh-75px)] w-full overflow-y-auto">
+    <div className="flex flex-col gap-[10px] height-full max-h-[calc(100vh-75px)] w-full overflow-y-auto">
       <FriendsRequest />
       <FriendSuggestion />
     </div>
